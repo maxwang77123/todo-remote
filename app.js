@@ -62,6 +62,16 @@ app.post('/todos', (req, res) => {
   })
 })
 
+//detail瀏覽特定todo
+app.get('/todos/:id', (req, res) => {
+  Todo.findById(req.params.id)
+    .lean()
+    .exec((err, todo) => {
+      if (err) return console.log(err)
+      return res.render('detail', { todo: todo })
+    })
+})
+
 //routes end
 
 app.listen(4000, () => {
