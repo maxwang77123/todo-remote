@@ -68,9 +68,32 @@ app.get('/todos/:id', (req, res) => {
     .lean()
     .exec((err, todo) => {
       if (err) return console.log(err)
-      return res.render('detail', { todo: todo })
+      return res.render('detail', { todo, todo })
     })
 })
+
+// edit - 處理db & 顯示結果
+app.get('/todos/:id/edit', (req, res) => {
+  Todo.findById(req.params.id, (err, todo) => {
+    if (err) return console.error(err)
+    return res.render('edit', { todo: todo })
+  })
+})
+app.post('/todos/:id/edit', (req, res) => {
+  Todo.findById(req.params.id)
+    .lean()
+    .exec((err, todo) => {
+      todo.name = req.body.name
+      todo.save((err) => {
+        return res.redirect('/todos/' + todo.id)
+      })
+    })
+})
+
+
+
+
+
 
 //routes end
 
